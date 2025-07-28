@@ -9,13 +9,27 @@ export async function POST(req: NextRequest) {
   try {
     await connectDb();
     const body = await parseBody(req);
-    const user = await UserModel.create(body);
+    console.log({ body });
+    const user = await UserModel.create({
+      ...body,
+      address: {
+        street: body.street,
+        city: body.city,
+        pin: body.pin,
+        state: body.state,
+        country: body.country,
+      },
+    });
     const payload = {
       _id: user?._id,
       username: user?.userName,
       firstName: user?.firstName,
       lastName: user?.lastName,
       address: user?.address,
+      userType: user?.userType,
+      fullName: user?.fullName,
+      email: user?.email,
+      phone: user?.phone,
     };
 
     if (user) {

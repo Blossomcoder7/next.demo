@@ -1,14 +1,8 @@
 "use client";
-import useAuth from "@/_context/hooks/useAuth";
 import Link from "next/link";
-import React, { ReactNode, useEffect } from "react";
+import React, { ReactNode } from "react";
 
 const Layout = ({ children }: { children: ReactNode }) => {
-  const { isLoggedIn } = useAuth();
-  useEffect(() => {
-    alert(`isLoggedIn, transporting to profile page`);
-  }, [isLoggedIn]);
-
   return (
     <div className="flex min-h-screen w-full bg-slate-900 text-white">
       {/* Left: Registration Navigation/Content */}

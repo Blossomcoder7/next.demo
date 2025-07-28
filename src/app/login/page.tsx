@@ -4,7 +4,7 @@ import { getLoginApi } from "@/_functions/auth";
 import { useDispatch } from "@/_store/hooks";
 import { login } from "@/_store/slices/auth";
 import { useMutation } from "@tanstack/react-query";
-import { redirect,  } from "next/navigation";
+import { redirect } from "next/navigation";
 import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 
@@ -46,8 +46,6 @@ const LoginPage = () => {
         alert(`Unable to login, Please try again later`);
       },
       onSuccess: (data) => {
-        alert(`User Logged In, Please wait`);
-        console.log({ data });
         dispatch(login({ user: data?.data }));
         setIsLoggedIn(true);
       },
@@ -56,7 +54,6 @@ const LoginPage = () => {
   useEffect(() => {
     console.log({ isLoggedIn });
     if (isLoggedIn) {
-      alert("Logged in redirecting.....");
       redirect("/my-profile");
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

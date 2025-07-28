@@ -70,7 +70,7 @@ UserSchema.post("save", async function () {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (this as any)?.fullName ||
     [this.firstName, this.lastName].filter(Boolean).join(", ");
-  await transportEmail({
+  transportEmail({
     mailOptions: {
       to: this.email,
       subject: "Greetings and Welcome",

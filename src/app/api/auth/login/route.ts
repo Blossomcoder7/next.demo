@@ -13,8 +13,8 @@ export async function POST(req: NextRequest) {
     const parsedBody = await parseBody(req);
     const { email, password } = parsedBody;
     const user =
-      (await ClientModel.findOne({ email }, " -updatedAt -createdAt -_v")) ||
-      UserModel.findOne({ email }, " -updatedAt -createdAt -_v");
+      (await ClientModel.findOne({ email })) ||
+      (await UserModel.findOne({ email }));
     if (!user) {
       return NextResponse.json(
         {
@@ -25,7 +25,7 @@ export async function POST(req: NextRequest) {
       );
     }
     console.log({ user });
-    const isLogin = await user.matchPassword(password);
+    const isLogin = await user.matchPassword?.(password);
     console.log({ isLogin });
     if (!isLogin) {
       return NextResponse.json(
@@ -38,6 +38,9 @@ export async function POST(req: NextRequest) {
     }
     const data = user.toObject();
     delete data.password;
+    delete data.createdAt;
+    delete data.updatedAt;
+    delete data.__v;
     const response = NextResponse.json(
       {
         success: true,
@@ -87,6 +90,7 @@ export async function GET(req: NextRequest) {
         decoded._id,
         "-password -createdAt -updatedAt -_v -iat"
       );
+      console.log({ data, userType, model });
       if (!data || !model) {
         const error: any = new Error(`User not found`);
         error.status = 404;

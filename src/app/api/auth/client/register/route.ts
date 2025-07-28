@@ -10,13 +10,27 @@ export async function POST(req: NextRequest) {
   try {
     await connectDb();
     const body = await parseBody(req);
-    const client = await ClientModel.create(body);
+    const client = await ClientModel.create({
+      ...body,
+      ...body,
+      address: {
+        street: body.street,
+        city: body.city,
+        pin: body.pin,
+        state: body.state,
+        country: body.country,
+      },
+    });
     const payload = {
       _id: client?._id,
       username: client?.userName,
       firstName: client?.firstName,
       lastName: client?.lastName,
       address: client?.address,
+      userType: client?.userType,
+      fullName: client?.fullName,
+      email: client?.email,
+      phone: client?.phone,
     };
     if (client) {
       const token = await jwt.sign(payload, secret, {

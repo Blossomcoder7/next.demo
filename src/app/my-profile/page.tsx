@@ -1,4 +1,5 @@
 "use client";
+import LogOutBtn from "@/_components/LogOutBtn";
 import useAuth from "@/_context/hooks/useAuth";
 import { useSelector } from "@/_store/hooks";
 import Image from "next/image";
@@ -14,8 +15,12 @@ const MyProfile = () => {
       redirect("/login");
     }
   }, [isLoggedIn]);
+
   return (
     <div className="min-h-screen w-full flex items-center justify-center bg-slate-700 py-12 px-4">
+      <div className=" fixed top-0 h-10 w-full flex items-center justify-end gap-4 px-4">
+        <LogOutBtn />
+      </div>
       <div className="flex flex-col md:flex-row bg-slate-900 rounded-2xl shadow-2xl overflow-hidden max-w-3xl w-full">
         {/* Avatar Section */}
         <div className="flex flex-col items-center justify-center bg-slate-800 p-8 md:w-2/5 w-full">

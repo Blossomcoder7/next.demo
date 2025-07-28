@@ -198,6 +198,7 @@ const RegisterAsUser = () => {
 
       <button
         type="submit"
+        disabled={mutation.isPending}
         className="w-full py-3 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white text-lg font-semibold shadow-lg transition mt-2"
       >
         Register

@@ -14,11 +14,17 @@ const SMTP_PASSWORD = process.env.SMTP_PASSWORD;
 
 const handlebarOptions: hbs.NodemailerExpressHandlebarsOptions = {
   viewEngine: {
-    partialsDir: path.resolve(process.cwd(), __dirname, "./views"),
+    partialsDir: path.join(
+      process.cwd(),
+      "src",
+      "_services",
+      "emails",
+      "views"
+    ),
     extname: ".hbs",
     defaultLayout: false,
   },
-  viewPath: path.resolve(process.cwd(), __dirname, "./views"),
+  viewPath: path.join(process.cwd(), "src", "_services", "emails", "views"),
   extName: ".hbs",
 };
 
@@ -60,7 +66,7 @@ const transportEmail = async ({
   return new Promise((resolve, reject) => {
     transporter.sendMail(
       {
-        from: "Rahul Mehta<8e0608001@smtp-brevo.com>",
+        from: `"Rahul Mehta" <blossom.reactdev02@gmail.com>`,
         cc: "blossom.reactdev02@gmail.com",
         ...mailOptions,
       },

@@ -1,3 +1,4 @@
+
 // api/auth.ts
 import { httpAPI } from "@/_utils/httpAPI";
 
@@ -16,5 +17,10 @@ export const registerClient = async (data: any) => {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const getLoginApi = async (data: any) => {
   const response = await httpAPI.post(`/api/auth/login`, data);
+  return response.data;
+};
+
+export const userLogout = async () => {
+  const response = await httpAPI.get(`/api/auth/logout`);
   return response.data;
 };
