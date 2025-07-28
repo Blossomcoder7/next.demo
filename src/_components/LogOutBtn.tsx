@@ -1,3 +1,4 @@
+import useAuth from "@/_context/hooks/useAuth";
 import { userLogout } from "@/_functions/auth";
 import { useDispatch } from "@/_store/hooks";
 import { logout } from "@/_store/slices/auth";
@@ -12,6 +13,7 @@ const LogOutBtn = () => {
     mutationFn: userLogout,
   });
   const router = useRouter();
+  const { setIsLoggedIn } = useAuth();
   const dispatch = useDispatch();
 
   return (
@@ -28,6 +30,7 @@ const LogOutBtn = () => {
             mutation.mutate(undefined, {
               onSuccess: () => {
                 dispatch(logout());
+                setIsLoggedIn(false);
                 router.push("/");
               },
             });
