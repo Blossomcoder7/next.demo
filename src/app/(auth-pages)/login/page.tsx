@@ -3,7 +3,6 @@ import useAuth from "@/_context/hooks/useAuth";
 import { getLoginApi } from "@/_functions/auth";
 import { useDispatch } from "@/_store/hooks";
 import { login } from "@/_store/slices/auth";
-import { btnClasses } from "@/app/page";
 import { useMutation } from "@tanstack/react-query";
 import clsx from "clsx";
 import { signIn } from "next-auth/react";
@@ -120,7 +119,7 @@ const LoginPage = () => {
           </div>
           <button
             type="submit"
-            className={clsx(btnClasses, "min-w-xs")}
+            className={clsx(" text-center bg-[#fcfcfc]  hover:bg-[#d9b989] text-[#262626] cursor-pointer transition-all duration-200 ease-in  hover:text-white font-semibold px-6 py-3 rounded-[33px]", "min-w-xs")}
             disabled={isSubmitting}
           >
             {isSubmitting ? "Logging in..." : "Login"}

@@ -3,7 +3,6 @@ import useAuth from "@/_context/hooks/useAuth";
 import { registerClient } from "@/_functions/auth";
 import { useDispatch } from "@/_store/hooks";
 import { login } from "@/_store/slices/auth";
-import { btnClasses } from "@/app/page";
 import { useMutation } from "@tanstack/react-query";
 import clsx from "clsx";
 import { signIn } from "next-auth/react";
@@ -211,7 +210,7 @@ const RegisterAsClient = () => {
         <button
           type="submit"
           disabled={mutation.isPending}
-          className={clsx(btnClasses, "min-w-xs w-full mb-10 mx-auto")}
+          className={clsx(" text-center bg-[#fcfcfc]  hover:bg-[#d9b989] text-[#262626] cursor-pointer transition-all duration-200 ease-in  hover:text-white font-semibold px-6 py-3 rounded-[33px]", "min-w-xs w-full mb-10 mx-auto")}
         >
           Register
         </button>

@@ -2,7 +2,7 @@
 
 import LogOutBtn from "@/_components/LogOutBtn";
 import { CldImage } from "next-cloudinary";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import ProfileImageUploader from "./ProfileImageUploader";
 import { useSelector } from "@/_store/hooks";
 import { useQuery } from "@tanstack/react-query";
@@ -11,7 +11,6 @@ import User from "@/_types/user";
 import { CircularProgress } from "@mui/material";
 import Image from "next/image";
 import clsx from "clsx";
-import { btnClasses } from "@/app/page";
 
 const MyProfile = () => {
   const [isEditing, setIsEditing] = useState<boolean>(false);
@@ -49,7 +48,11 @@ const MyProfile = () => {
   return (
     <div className="min-h-screen w-full flex items-center justify-center bg-[#262626] py-12 px-4">
       <div className="fixed top-3 h-10 w-full flex items-center justify-end gap-4 px-4">
-        <div className={clsx(btnClasses)}>
+        <div
+          className={clsx(
+            " text-center bg-[#fcfcfc]  hover:bg-[#d9b989] text-[#262626] cursor-pointer transition-all duration-200 ease-in  hover:text-white font-semibold px-6 py-3 rounded-[33px]"
+          )}
+        >
           <LogOutBtn />
         </div>
       </div>

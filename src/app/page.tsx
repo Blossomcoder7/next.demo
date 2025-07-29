@@ -31,11 +31,19 @@ export default function Home() {
               <div className="grid grid-cols-2 gap-5 w-full">
                 <button
                   onClick={() => router.push("/profile")}
-                  className={clsx(btnClasses, "col-span-1")}
+                  className={clsx(
+                    " text-center bg-[#fcfcfc]  hover:bg-[#d9b989] text-[#262626] cursor-pointer transition-all duration-200 ease-in  hover:text-white font-semibold px-6 py-3 rounded-[33px]",
+                    "col-span-1"
+                  )}
                 >
                   View Profile
                 </button>
-                <div className={clsx(btnClasses, "col-span-1 ")}>
+                <div
+                  className={clsx(
+                    " text-center bg-[#fcfcfc]  hover:bg-[#d9b989] text-[#262626] cursor-pointer transition-all duration-200 ease-in  hover:text-white font-semibold px-6 py-3 rounded-[33px]",
+                    "col-span-1 "
+                  )}
+                >
                   <LogOutBtn />
                 </div>
               </div>
@@ -60,21 +68,30 @@ export default function Home() {
                 <div className="w-full grid gap-4 grid-cols-2">
                   <button
                     onClick={() => router.push("/login")}
-                    className={clsx(btnClasses, "col-span-1")}
+                    className={clsx(
+                      " text-center bg-[#fcfcfc]  hover:bg-[#d9b989] text-[#262626] cursor-pointer transition-all duration-200 ease-in  hover:text-white font-semibold px-6 py-3 rounded-[33px]",
+                      "col-span-1"
+                    )}
                   >
                     Login With Email
                   </button>
 
                   <button
                     onClick={() => signIn("google")}
-                    className={clsx(btnClasses, "col-span-1")}
+                    className={clsx(
+                      " text-center bg-[#fcfcfc]  hover:bg-[#d9b989] text-[#262626] cursor-pointer transition-all duration-200 ease-in  hover:text-white font-semibold px-6 py-3 rounded-[33px]",
+                      "col-span-1"
+                    )}
                   >
                     Sign in with Google
                   </button>
 
                   <button
                     onClick={() => router.push("/register")}
-                    className={clsx(btnClasses, "col-span-2")}
+                    className={clsx(
+                      " text-center bg-[#fcfcfc]  hover:bg-[#d9b989] text-[#262626] cursor-pointer transition-all duration-200 ease-in  hover:text-white font-semibold px-6 py-3 rounded-[33px]",
+                      "col-span-2"
+                    )}
                   >
                     Register
                   </button>
@@ -90,4 +107,3 @@ export default function Home() {
     </>
   );
 }
-export const btnClasses = ` text-center bg-[#fcfcfc]  hover:bg-[#d9b989] text-[#262626] cursor-pointer transition-all duration-200 ease-in  hover:text-white font-semibold px-6 py-3 rounded-[33px]`;
