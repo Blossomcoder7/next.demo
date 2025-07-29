@@ -5,43 +5,34 @@ import { useDispatch } from "@/_store/hooks";
 import { login, logout } from "@/_store/slices/auth";
 import { CircularProgress } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
-import { redirect } from "next/navigation";
+import { useSession } from "next-auth/react";
 import React, { PropsWithChildren, useEffect, useState } from "react";
 
 const AuthProvider = ({ children }: PropsWithChildren) => {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
-
-  const { data, isLoading, error } = useQuery({
+  const { data: userData, status } = useSession();
+  const { data, isLoading } = useQuery({
     queryKey: ["user-auth"],
     queryFn: refreshAuth,
     refetchOnMount: true,
     refetchOnWindowFocus: true,
+    enabled: status !== "authenticated",
   });
-
   const dispatch = useDispatch();
   useEffect(() => {
     if (isLoading) {
       return;
     }
-    console.log({ data });
-    if (data?.data) {
+    console.log({ data, userData });
+    if (data?.data || userData?.user) {
       setIsLoggedIn(true);
-      dispatch(login({ user: data?.data }));
+      dispatch(login({ user: data?.data || userData?.user }));
     } else {
       setIsLoggedIn(false);
       dispatch(logout());
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data]);
-  useEffect(() => {
-    if (error?.cause === 401) {
-      alert("You have been logged out");
-      setIsLoggedIn(false);
-      dispatch(logout());
-      redirect("/");
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [error]);
+  }, [data, userData]);
 
   return (
     <AuthContext.Provider

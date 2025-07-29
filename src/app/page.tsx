@@ -1,71 +1,93 @@
 "use client";
+import LogOutBtn from "@/_components/LogOutBtn";
+import useAuth from "@/_context/hooks/useAuth";
 import { useSelector } from "@/_store/hooks";
+import { signIn } from "next-auth/react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import clsx from "clsx";
+import BrandingSeg from "@/_components/BrandingSeg";
 
 export default function Home() {
   const router = useRouter();
   const user = useSelector((state) => state.auth.user);
+  const { isLoggedIn } = useAuth();
 
   return (
-    <div className="min-h-screen flex bg-gradient-to-br from-gray-900 to-gray-800">
-      {/* Left Column: Branding/Visual */}
-      <div className="hidden md:flex flex-col justify-center items-center w-1/2 px-10 bg-gradient-to-br from-indigo-900 via-gray-900 to-gray-800">
-        <div className="w-full h-full p-40 relative">
-          <Image
-            src="/next.svg"
-            alt="Brand image"
-            className="rounded-lg shadow-2xl mt-8 max-w-md aspect-video mx-auto"
-            fill
-          />
-        </div>
-      </div>
-
-      {/* Right Column: CTA */}
-      <div className="w-full md:w-1/2 flex flex-col items-center justify-center px-8">
-        {user?._id ? (
-          <>
-            <div className="bg-gray-900/80 shadow-xl rounded-xl p-10 w-full max-w-md text-center">
-              <h2 className="text-3xl font-bold text-indigo-200 mb-2">
-                Welcome!
-              </h2>
-              <p className="text-gray-400 mb-8 tracking-wide">
-                {user.fullName}
+    <>
+      <div className="w-full min-h-screen  grid grid-cols-1 md:grid-cols-2 bg-[#262626] text-[#fcfcfc]">
+        <BrandingSeg />
+        <div className="col-span-full md:col-span-1  h-full  w-full  flex flex-col items-center px-5 justify-center space-y-5">
+          {isLoggedIn ? (
+            <div className="flex flex-col justify-center items-center space-y-10">
+              <p className="text-[#fcfcfc] text-center  tracking-wide">
+                You have already signed up on our platform as
               </p>
-              <div className="flex flex-col gap-4">
-                <p className="text-gray-300  tracking-wide">{user.email}</p>
-                <p className="text-gray-300  tracking-wide">{user.userName}</p>
+              {isLoggedIn ? (
+                <p className="text-[#fcfcfc] text-center  tracking-wide">
+                  {user?.fullName || user?.firstName || user?.email || "You"}
+                </p>
+              ) : null}
+              <div className="grid grid-cols-2 gap-5 w-full">
+                <button
+                  onClick={() => router.push("/profile")}
+                  className={clsx(btnClasses, "col-span-1")}
+                >
+                  View Profile
+                </button>
+                <div className={clsx(btnClasses, "col-span-1 ")}>
+                  <LogOutBtn />
+                </div>
+              </div>
+              <p className="text-[#fcfcfc] text-sm text-center mb-8 tracking-wide">
+                This platform is powered by
+              </p>
+              <div className="w-full h-32 mt-10 relative">
+                <Image
+                  src="/next.svg"
+                  alt="Brand image"
+                  className="rounded-lg  max-w-md aspect-video mx-auto"
+                  fill
+                />
               </div>
             </div>
-          </>
-        ) : (
-          <div className="bg-gray-900/80 shadow-xl rounded-xl p-10 w-full max-w-md text-center">
-            <h2 className="text-3xl font-bold text-indigo-200 mb-2">
-              Welcome!
-            </h2>
-            <p className="text-gray-400 mb-8 tracking-wide">
-              Get started in seconds.
-            </p>
-            <div className="flex flex-col gap-4">
-              <button
-                onClick={() => router.push("/login")}
-                className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-6 py-3 rounded-lg shadow transition"
-              >
-                Login
-              </button>
-              <button
-                onClick={() => router.push("/register")}
-                className="bg-gray-800 border border-indigo-600 hover:bg-indigo-600 hover:border-indigo-700 text-indigo-300 hover:text-white font-semibold px-6 py-3 rounded-lg shadow transition"
-              >
-                Sign Up
-              </button>
-            </div>
-          </div>
-        )}
-        <p className="text-gray-600 mt-8 text-sm">
-          © {new Date().getFullYear()} MyApp. All rights reserved.
-        </p>
+          ) : (
+            <>
+              <div className="flex flex-col gap-4">
+                <p className="text-[#fcfcfc] text-center mb-8 tracking-wide">
+                  Get started in seconds.
+                </p>
+                <div className="w-full grid gap-4 grid-cols-2">
+                  <button
+                    onClick={() => router.push("/login")}
+                    className={clsx(btnClasses, "col-span-1")}
+                  >
+                    Login With Email
+                  </button>
+
+                  <button
+                    onClick={() => signIn("google")}
+                    className={clsx(btnClasses, "col-span-1")}
+                  >
+                    Sign in with Google
+                  </button>
+
+                  <button
+                    onClick={() => router.push("/register")}
+                    className={clsx(btnClasses, "col-span-2")}
+                  >
+                    Register
+                  </button>
+                </div>
+              </div>
+            </>
+          )}
+          <p className="text-gray-600 text-center mt-8 text-sm">
+            © {new Date().getFullYear()} MyApp. All rights reserved.
+          </p>
+        </div>
       </div>
-    </div>
+    </>
   );
 }
+export const btnClasses = ` text-center bg-[#fcfcfc]  hover:bg-[#d9b989] text-[#262626] cursor-pointer transition-all duration-200 ease-in  hover:text-white font-semibold px-6 py-3 rounded-[33px]`;

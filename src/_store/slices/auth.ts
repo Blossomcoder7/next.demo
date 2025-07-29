@@ -1,17 +1,9 @@
+import User from "@/_types/user";
 import { createSlice } from "@reduxjs/toolkit";
+import { signOut } from "next-auth/react";
 
-interface User_Type {
-  _id: string;
-  userName: string;
-  fullName: string;
-  email: string;
-  avatar: string;
-  phone: string;
-  address: any;
-  id: string;
-}
 const initialState: {
-  user: User_Type | undefined;
+  user: User | undefined;
   session_token?: string | undefined;
 } = {
   user: undefined,
@@ -36,6 +28,7 @@ const auth = createSlice({
      */
     logout: (state) => {
       state.user = undefined;
+      signOut();
     },
   },
 });

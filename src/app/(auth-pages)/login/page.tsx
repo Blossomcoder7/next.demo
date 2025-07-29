@@ -3,7 +3,11 @@ import useAuth from "@/_context/hooks/useAuth";
 import { getLoginApi } from "@/_functions/auth";
 import { useDispatch } from "@/_store/hooks";
 import { login } from "@/_store/slices/auth";
+import { btnClasses } from "@/app/page";
 import { useMutation } from "@tanstack/react-query";
+import clsx from "clsx";
+import { signIn } from "next-auth/react";
+
 import { redirect } from "next/navigation";
 import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
@@ -24,6 +28,7 @@ const LoginPage = () => {
   const mutation = useMutation({
     mutationFn: getLoginApi,
   });
+
   const dispatch = useDispatch();
   /**
    * Handles form submission for user login
@@ -45,27 +50,29 @@ const LoginPage = () => {
         console.log({ error });
         alert(`Unable to login, Please try again later`);
       },
-      onSuccess: (data) => {
-        dispatch(login({ user: data?.data }));
+      onSuccess: async (resdata) => {
+        await signIn("credentials", {
+          redirect: false,
+          email: data.email,
+          password: data.password,
+        });
+        dispatch(login({ user: resdata?.data }));
         setIsLoggedIn(true);
       },
     });
   };
+
   useEffect(() => {
-    console.log({ isLoggedIn });
     if (isLoggedIn) {
-      redirect("/my-profile");
+      redirect("/profile");
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLoggedIn]);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 to-gray-800">
-      <div className="bg-slate-900/90 rounded-lg shadow-2xl p-10 w-full max-w-md text-center">
-        <h2 className="text-3xl font-bold text-indigo-200 mb-2">
-          Welcome Back
-        </h2>
-        <p className="text-gray-400 mb-8 tracking-wide">
+    <div className="h-full w-full flex items-center justify-center ">
+      <div className="bg-[#202020]  p-10 w-full h-full flex flex-col justify-center items-center text-center">
+        <h2 className="text-3xl font-bold text-[#fcfcfc] mb-2">Welcome Back</h2>
+        <p className="text-[#fcfcfc] mb-8 tracking-wide">
           Login to your account to continue
         </p>
         <form
@@ -84,13 +91,11 @@ const LoginPage = () => {
                 },
               })}
               placeholder="Email"
-              className="w-full bg-slate-800 border border-slate-700 rounded-lg px-4 py-3 text-indigo-100 placeholder-indigo-400 outline-none focus:ring-2 focus:ring-indigo-500 transition"
+              className="w-full bg-[#262626] border border-[#d9b989] rounded-lg px-4 py-3 text-[#fcfcfc] placeholder-[#d9b989] outline-none focus:ring-2 focus:ring-[#d9b989] transition"
               disabled={isSubmitting}
             />
             {errors.email && (
-              <p className="text-pink-400 text-xs mt-1">
-                {errors.email.message}
-              </p>
+              <p className="text-[red] text-xs mt-1">{errors.email.message}</p>
             )}
           </div>
           <div>
@@ -104,24 +109,24 @@ const LoginPage = () => {
                 },
               })}
               placeholder="Password"
-              className="w-full bg-slate-800 border border-slate-700 rounded-lg px-4 py-3 text-indigo-100 placeholder-indigo-400 outline-none focus:ring-2 focus:ring-indigo-500 transition"
+              className="w-full bg-[#262626] border border-[#d9b989] rounded-lg px-4 py-3 text-[#fcfcfc] placeholder-[#d9b989] outline-none focus:ring-2 focus:ring-[#d9b989] transition"
               disabled={isSubmitting}
             />
             {errors.password && (
-              <p className="text-pink-400 text-xs mt-1">
+              <p className="text-[red] text-xs mt-1">
                 {errors.password.message}
               </p>
             )}
           </div>
           <button
             type="submit"
-            className="w-full py-3 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white text-lg font-semibold shadow-lg transition mt-2"
+            className={clsx(btnClasses, "min-w-xs")}
             disabled={isSubmitting}
           >
             {isSubmitting ? "Logging in..." : "Login"}
           </button>
         </form>
-        <div className="mt-6 text-indigo-300 text-sm">
+        <div className="mt-6 text-[#fcfcfc] text-sm">
           <span>{"Don't"} have an account? </span>
           <a
             href="/register"

@@ -23,6 +23,9 @@ const UserSchema = new Schema(
     },
     age: { type: Number, default: undefined },
     dob: { type: Date, default: undefined },
+    avatar: { type: String, default: undefined },
+    provider: { type: String, default: undefined },
+
     //contacts
     email: {
       type: String,

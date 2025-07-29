@@ -23,6 +23,8 @@ const ClientSchema = new Schema(
     },
     age: { type: Number, default: undefined },
     dob: { type: Date, default: undefined, trim: true },
+    avatar: { type: String, default: undefined },
+    provider: { type: String, default: undefined },
     //contacts
     email: {
       type: String,

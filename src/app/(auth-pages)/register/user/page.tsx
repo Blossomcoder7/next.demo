@@ -3,7 +3,10 @@ import useAuth from "@/_context/hooks/useAuth";
 import { registerUser } from "@/_functions/auth";
 import { useDispatch } from "@/_store/hooks";
 import { login } from "@/_store/slices/auth";
+import { btnClasses } from "@/app/page";
 import { useMutation } from "@tanstack/react-query";
+import clsx from "clsx";
+import { signIn } from "next-auth/react";
 import { redirect } from "next/navigation";
 import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
@@ -36,16 +39,24 @@ const RegisterAsUser = () => {
   });
   useEffect(() => {
     if (isLoggedIn) {
-      redirect("/my-profile");
+      redirect("/profile");
     }
   }, [isLoggedIn]);
 
   const onSubmit = (data: FormValues) => {
     mutation.mutate(data, {
-      onSuccess: (responseData) => {
-        console.log({ responseData });
-        dispatch(login({ user: responseData?.data }));
-        setIsLoggedIn(true);
+      onSuccess: async (responseData) => {
+        const { email, password } = data;
+        const res = await signIn("credentials", {
+          redirect: false, // avoid redirect by NextAuth itself
+          email,
+          password,
+        });
+        if (res) {
+          console.log({ responseData });
+          dispatch(login({ user: responseData?.data }));
+          setIsLoggedIn(true);
+        }
       },
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       onError: (error: any) => {
@@ -66,7 +77,7 @@ const RegisterAsUser = () => {
           <input
             {...register("firstName", { required: "First name is required" })}
             placeholder="First Name"
-            className="w-full bg-slate-800 border border-slate-700 rounded-lg px-4 py-3 text-indigo-100 placeholder-indigo-400 outline-none focus:ring-2 focus:ring-indigo-500 transition"
+            className="w-full bg-[#262626] border border-[#d9b989] rounded-lg px-4 py-3 text-[#fcfcfc] placeholder-[#d9b989] outline-none focus:ring-2 focus:ring-[#d9b989] transition"
           />
           {errors.firstName && (
             <p className="text-pink-400 text-xs mt-1">
@@ -78,7 +89,7 @@ const RegisterAsUser = () => {
           <input
             {...register("lastName", { required: "Last name is required" })}
             placeholder="Last Name"
-            className="w-full bg-slate-800 border border-slate-700 rounded-lg px-4 py-3 text-indigo-100 placeholder-indigo-400 outline-none focus:ring-2 focus:ring-indigo-500 transition"
+            className="w-full bg-[#262626] border border-[#d9b989] rounded-lg px-4 py-3 text-[#fcfcfc] placeholder-[#d9b989] outline-none focus:ring-2 focus:ring-[d9b989] transition"
           />
           {errors.lastName && (
             <p className="text-pink-400 text-xs mt-1">
@@ -94,7 +105,7 @@ const RegisterAsUser = () => {
           pattern: { value: /^\S+@\S+$/i, message: "Invalid email" },
         })}
         placeholder="Email"
-        className="w-full bg-slate-800 border border-slate-700 rounded-lg px-4 py-3 text-indigo-100 placeholder-indigo-400 outline-none focus:ring-2 focus:ring-indigo-500 transition"
+        className="w-full bg-[#262626] border border-[#d9b989] rounded-lg px-4 py-3 text-[#fcfcfc] placeholder-[#d9b989] outline-none focus:ring-2 focus:ring-[d9b989] transition"
       />
       {errors.email && (
         <p className="text-pink-400 text-xs mt-1">{errors.email.message}</p>
@@ -103,7 +114,7 @@ const RegisterAsUser = () => {
       <input
         {...register("phone", { required: "Phone number is required" })}
         placeholder="Phone Number"
-        className="w-full bg-slate-800 border border-slate-700 rounded-lg px-4 py-3 text-indigo-100 placeholder-indigo-400 outline-none focus:ring-2 focus:ring-indigo-500 transition"
+        className="w-full bg-[#262626] border border-[#d9b989] rounded-lg px-4 py-3 text-[#fcfcfc] placeholder-[#d9b989] outline-none focus:ring-2 focus:ring-[d9b989] transition"
       />
       {errors.phone && (
         <p className="text-pink-400 text-xs mt-1">{errors.phone.message}</p>
@@ -114,7 +125,7 @@ const RegisterAsUser = () => {
           <input
             type="date"
             {...register("dob", { required: "Date of birth is required" })}
-            className="w-full bg-slate-800 border border-slate-700 rounded-lg px-4 py-3 text-indigo-100 placeholder-indigo-400 outline-none focus:ring-2 focus:ring-indigo-500 transition"
+            className="w-full bg-[#262626] border border-[#d9b989] rounded-lg px-4 py-3 text-[#fcfcfc] placeholder-[#d9b989] outline-none focus:ring-2 focus:ring-[d9b989] transition"
           />
           {errors.dob && (
             <p className="text-pink-400 text-xs mt-1">{errors.dob.message}</p>
@@ -124,7 +135,7 @@ const RegisterAsUser = () => {
           <input
             {...register("city", { required: "City is required" })}
             placeholder="City"
-            className="w-full bg-slate-800 border border-slate-700 rounded-lg px-4 py-3 text-indigo-100 placeholder-indigo-400 outline-none focus:ring-2 focus:ring-indigo-500 transition"
+            className="w-full bg-[#262626] border border-[#d9b989] rounded-lg px-4 py-3 text-[#fcfcfc] placeholder-[#d9b989] outline-none focus:ring-2 focus:ring-[d9b989] transition"
           />
           {errors.city && (
             <p className="text-pink-400 text-xs mt-1">{errors.city.message}</p>
@@ -137,7 +148,7 @@ const RegisterAsUser = () => {
           <input
             {...register("street", { required: "Street is required" })}
             placeholder="Street"
-            className="w-full bg-slate-800 border border-slate-700 rounded-lg px-4 py-3 text-indigo-100 placeholder-indigo-400 outline-none focus:ring-2 focus:ring-indigo-500 transition"
+            className="w-full bg-[#262626] border border-[#d9b989] rounded-lg px-4 py-3 text-[#fcfcfc] placeholder-[#d9b989] outline-none focus:ring-2 focus:ring-[d9b989] transition"
           />
           {errors.street && (
             <p className="text-pink-400 text-xs mt-1">
@@ -149,7 +160,7 @@ const RegisterAsUser = () => {
           <input
             {...register("country", { required: "Country is required" })}
             placeholder="Country"
-            className="w-full bg-slate-800 border border-slate-700 rounded-lg px-4 py-3 text-indigo-100 placeholder-indigo-400 outline-none focus:ring-2 focus:ring-indigo-500 transition"
+            className="w-full bg-[#262626] border border-[#d9b989] rounded-lg px-4 py-3 text-[#fcfcfc] placeholder-[#d9b989] outline-none focus:ring-2 focus:ring-[d9b989] transition"
           />
           {errors.country && (
             <p className="text-pink-400 text-xs mt-1">
@@ -162,7 +173,7 @@ const RegisterAsUser = () => {
       <input
         {...register("pin", { required: "Pin code is required" })}
         placeholder="Pin Code"
-        className="w-full bg-slate-800 border border-slate-700 rounded-lg px-4 py-3 text-indigo-100 placeholder-indigo-400 outline-none focus:ring-2 focus:ring-indigo-500 transition"
+        className="w-full bg-[#262626] border border-[#d9b989] rounded-lg px-4 py-3 text-[#fcfcfc] placeholder-[#d9b989] outline-none focus:ring-2 focus:ring-[d9b989] transition"
       />
       {errors.pin && (
         <p className="text-pink-400 text-xs mt-1">{errors.pin.message}</p>
@@ -175,7 +186,7 @@ const RegisterAsUser = () => {
         })}
         type="password"
         placeholder="Password"
-        className="w-full bg-slate-800 border border-slate-700 rounded-lg px-4 py-3 text-indigo-100 placeholder-indigo-400 outline-none focus:ring-2 focus:ring-indigo-500 transition"
+        className="w-full bg-[#262626] border border-[#d9b989] rounded-lg px-4 py-3 text-[#fcfcfc] placeholder-[#d9b989] outline-none focus:ring-2 focus:ring-[d9b989] transition"
       />
       {errors.password && (
         <p className="text-pink-400 text-xs mt-1">{errors.password.message}</p>
@@ -188,7 +199,7 @@ const RegisterAsUser = () => {
         })}
         type="password"
         placeholder="Confirm Password"
-        className="w-full bg-slate-800 border border-slate-700 rounded-lg px-4 py-3 text-indigo-100 placeholder-indigo-400 outline-none focus:ring-2 focus:ring-indigo-500 transition"
+        className="w-full bg-[#262626] border border-[#d9b989] rounded-lg px-4 py-3 text-[#fcfcfc] placeholder-[#d9b989] outline-none focus:ring-2 focus:ring-[d9b989] transition"
       />
       {errors.confirmPassword && (
         <p className="text-pink-400 text-xs mt-1">
@@ -196,13 +207,15 @@ const RegisterAsUser = () => {
         </p>
       )}
 
-      <button
-        type="submit"
-        disabled={mutation.isPending}
-        className="w-full py-3 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white text-lg font-semibold shadow-lg transition mt-2"
-      >
-        Register
-      </button>
+      <div className="w-full items-center justify-center">
+        <button
+          type="submit"
+          disabled={mutation.isPending}
+          className={clsx(btnClasses, "min-w-xs w-full mb-10 mx-auto")}
+        >
+          Register
+        </button>
+      </div>
     </form>
   );
 };

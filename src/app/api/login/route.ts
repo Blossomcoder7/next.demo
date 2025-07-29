@@ -6,6 +6,9 @@ import UserModel from "@/_models/users/user/User";
 import parseBody from "@/_utils/parseBody";
 import { NextRequest, NextResponse } from "next/server";
 import { getModelByName } from "@/_utils/models";
+import { getServerSession } from "next-auth";
+import { authOptions } from "../auth/[...nextauth]/options";
+
 
 export async function POST(req: NextRequest) {
   try {
@@ -67,46 +70,65 @@ export async function POST(req: NextRequest) {
 export async function GET(req: NextRequest) {
   try {
     await connectDb();
+
     const token = req.cookies.get("token");
-    if (!token) {
-      console.log("No token found");
+    const session = await getServerSession(authOptions);
+
+    // If neither session nor token, block access
+    if (!token && !session) {
       const error: any = new Error(`Unauthorized access`);
       error.status = 401;
       throw error;
-    } else {
-      console.log({ token });
-      const decoded = await jwt.verify(token.value, process.env.JWT_SECRET!);
-      console.log({ decoded });
+    }
+
+    if ((session as any)?.user) {
+      console.log("Authenticated via session", (session as any)?.user);
+      return NextResponse.json(
+        {
+          success: true,
+          message: "Session auth success",
+          data: (session as any)?.user,
+        },
+        { status: 200 }
+      );
+    }
+
+    if (token) {
+      const decoded = jwt.verify(token.value, process.env.JWT_SECRET!);
+
       if (!decoded || typeof decoded === "string") {
         const error: any = new Error(
-          "Expired or Invalid auth, Please refresh your access"
+          "Expired or invalid auth. Please log in again."
         );
         error.status = 401;
         throw error;
       }
+
       const userType = (decoded as jwt.JwtPayload)?.userType;
       const model = await getModelByName(userType as "user" | "client");
       const data = await model?.findById(
         decoded._id,
         "-password -createdAt -updatedAt -_v -iat"
       );
-      console.log({ data, userType, model });
-      if (!data || !model) {
+
+      if (!data) {
         const error: any = new Error(`User not found`);
         error.status = 404;
         throw error;
       }
+
       return NextResponse.json(
         {
           success: true,
-          message: "Refresh auth success",
-          data: data?.toObject(),
+          message: "Token auth success",
+          data: data.toObject(),
         },
-        {
-          status: 200,
-        }
+        { status: 200 }
       );
     }
+    const error: any = new Error(`Unauthorized`);
+    error.status = 401;
+    throw error;
   } catch (error) {
     return handleApiErrors(error);
   }
