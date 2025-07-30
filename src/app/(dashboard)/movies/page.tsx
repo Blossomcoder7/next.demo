@@ -4,6 +4,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/options";
 import { redirect } from "next/navigation";
 import MovieCard from "./MovieCard";
+import Link from "next/link";
 
 interface Props {
   searchParams: Promise<{ page: string }>;
@@ -27,20 +28,20 @@ export default async function Page({ searchParams }: Props) {
 
       {/* Pagination Controls */}
       <div className="flex gap-4 mb-10">
-        <a
+        <Link
           href={`?page=${page - 1}`}
           className={`px-4 py-2 bg-[#d9b989] rounded-xl ${
             page <= 1 ? "pointer-events-none opacity-30" : ""
           }`}
         >
           Previous
-        </a>
-        <a
+        </Link>
+        <Link
           href={`?page=${page + 1}`}
           className="px-4 py-2 bg-[#d9b989] rounded-xl"
         >
           Next
-        </a>
+        </Link>
       </div>
     </div>
   );
