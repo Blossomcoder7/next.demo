@@ -5,7 +5,7 @@ import { useDispatch } from "@/_store/hooks";
 import { logout } from "@/_store/slices/auth";
 import { useMutation } from "@tanstack/react-query";
 import { signOut } from "next-auth/react";
-import { useRouter } from "next/navigation";
+
 import React from "react";
 import Swal from "sweetalert2";
 
@@ -13,7 +13,7 @@ const LogOutBtn = () => {
   const mutation = useMutation({
     mutationFn: userLogout,
   });
-  const router = useRouter();
+
   const { setIsLoggedIn } = useAuth();
   const dispatch = useDispatch();
 

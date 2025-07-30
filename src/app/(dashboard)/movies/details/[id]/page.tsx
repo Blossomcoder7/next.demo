@@ -2,8 +2,13 @@ import React from "react";
 import Image from "next/image";
 import { getMovieById } from "@/_functions/movies";
 
-export default async function Page({ params }: { params: { id: string } }) {
-  const movie = await getMovieById(params.id);
+interface Props {
+  params: Promise<{ id: string }>;
+}
+
+export default async function Page({ params }: Props) {
+  const { id } = await params;
+  const movie = await getMovieById(id);
 
   if (!movie) {
     return <div className="bg-[#262626] text-white p-4">Movie not found</div>;

@@ -21,7 +21,7 @@ export async function getMovies(
     .toArray();
   return docs?.map((a) => a as unknown as Movie);
 }
-export async function getMovieById(id: string): Promise<Movie | null> {
+export async function getMovieById(id?: string): Promise<Movie | null> {
   await connectDb();
   const session = await getServerSession(authOptions);
   if (!session) {

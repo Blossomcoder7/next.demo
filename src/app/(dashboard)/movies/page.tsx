@@ -5,16 +5,16 @@ import { authOptions } from "@/app/api/auth/[...nextauth]/options";
 import { redirect } from "next/navigation";
 import MovieCard from "./MovieCard";
 
-export default async function Page({
-  searchParams,
-}: {
-  searchParams: { page?: string };
-}) {
+interface Props {
+  searchParams: Promise<{ page: string }>;
+}
+export default async function Page({ searchParams }: Props) {
   const session = await getServerSession(authOptions);
   if (!session) {
     redirect("/login");
   }
-  const page = parseInt(searchParams.page || "1");
+  const { page: p } = await searchParams;
+  const page = parseInt(p || "1");
   const movies = await getMovies(page);
 
   return (
