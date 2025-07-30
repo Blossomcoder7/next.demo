@@ -3,14 +3,15 @@
 import LogOutBtn from "@/_components/LogOutBtn";
 import { CldImage } from "next-cloudinary";
 import React, { useState } from "react";
-import ProfileImageUploader from "./ProfileImageUploader";
 import { useSelector } from "@/_store/hooks";
 import { useQuery } from "@tanstack/react-query";
 import { fetchProfile } from "@/_functions/profile";
 import User from "@/_types/user";
 import { CircularProgress } from "@mui/material";
 import Image from "next/image";
-import clsx from "clsx";
+
+import CloudinaryImageUpload from "./CloudinaryImageUpload";
+
 
 const MyProfile = () => {
   const [isEditing, setIsEditing] = useState<boolean>(false);
@@ -31,7 +32,7 @@ const MyProfile = () => {
   if (isLoading) {
     return (
       <div className="min-h-screen flex justify-center items-center bg-[#262626] text-white flex-col">
-        <CircularProgress sx={{ color: "red" }} size={22} />
+        <CircularProgress sx={{ color: "gold" }} size={22} />
         Loading profile...
       </div>
     );
@@ -47,16 +48,6 @@ const MyProfile = () => {
 
   return (
     <div className="min-h-screen w-full flex items-center justify-center bg-[#262626] py-12 px-4">
-      <div className="fixed top-3 h-10 w-full flex items-center justify-end gap-4 px-4">
-        <div
-          className={clsx(
-            " text-center bg-[#fcfcfc]  hover:bg-[#d9b989] text-[#262626] cursor-pointer transition-all duration-200 ease-in  hover:text-white font-semibold px-6 py-3 rounded-[33px]"
-          )}
-        >
-          <LogOutBtn />
-        </div>
-      </div>
-
       <div className="flex flex-col md:flex-row bg-[#1f1f1f] rounded-2xl shadow-2xl overflow-hidden max-w-3xl w-full border border-[#333]">
         {/* Avatar Section */}
         <div className="flex flex-col items-center justify-center bg-[#1a1a1a] p-8 md:w-2/5 w-full">
@@ -87,21 +78,30 @@ const MyProfile = () => {
                 <span className="text-white">No Image</span>
               )
             ) : (
-              <ProfileImageUploader
+              <CloudinaryImageUpload
                 onClose={() => {
                   setIsEditing(false);
                 }}
-              />
+              ></CloudinaryImageUpload>
             )}
           </div>
 
-          {!isEditing && (
+          {!isEditing ? (
             <button
               onClick={() => setIsEditing(true)}
               className="mt-3 text-[#d9b989] hover:underline"
             >
               Edit
             </button>
+          ) : (
+            <>
+              <button
+                onClick={() => setIsEditing(false)}
+                className="mt-3 text-[#d9b989] hover:underline"
+              >
+                Done
+              </button>
+            </>
           )}
 
           <div className="mt-4 text-center">
@@ -133,7 +133,7 @@ const MyProfile = () => {
 
           <span className="flex items-center gap-2">
             <span className="w-28 text-[#d9b989] font-semibold">DOB:</span>
-            <span>{userData?.dob}</span>
+            <span>{new Date(userData?.dob)?.toDateString()}</span>
           </span>
 
           <span className="flex items-center gap-2">

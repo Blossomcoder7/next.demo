@@ -1,3 +1,4 @@
+"use client";
 import useAuth from "@/_context/hooks/useAuth";
 import { userLogout } from "@/_functions/auth";
 import { useDispatch } from "@/_store/hooks";

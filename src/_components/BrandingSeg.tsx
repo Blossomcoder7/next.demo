@@ -1,9 +1,12 @@
 "use client";
+import clsx from "clsx";
 import Image from "next/image";
-import { redirect } from "next/navigation";
+import { redirect, usePathname } from "next/navigation";
 import React from "react";
 
 const BrandingSeg = () => {
+  const pathname = usePathname();
+  const isContactUs = pathname.includes("contact-us");
   return (
     <>
       <div className="col-span-full bg-[#d9b9891c]  md:col-span-1 h-full flex-1  w-full  flex flex-col items-center px-5 justify-center space-y-5">
@@ -23,6 +26,17 @@ const BrandingSeg = () => {
           </div>
           <span>Odyssey</span>
         </div>
+        {isContactUs ? null : (
+          <div
+            onClick={() => redirect("/contact-us")}
+            className={clsx(
+              " text-center bg-[#fcfcfc]  hover:bg-[#d9b989] text-[#262626] cursor-pointer transition-all duration-200 ease-in  hover:text-white font-semibold px-6 py-3 rounded-[33px]",
+              "col-span-1"
+            )}
+          >
+            Contact Us
+          </div>
+        )}
       </div>
     </>
   );

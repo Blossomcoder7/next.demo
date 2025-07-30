@@ -51,7 +51,11 @@
     font-style: italic;
   }
 
-  .inter{
+  .inter {
     font-family: "Inter", sans-serif;
   }
+}
+
+body {
+  background-color: #262626;
 }

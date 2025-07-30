@@ -12,6 +12,10 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "res.cloudinary.com", // for Cloudinary images
       },
+      {
+        protocol: "https",
+        hostname: "m.media-amazon.com", // for amazon images
+      },
     ],
   },
 };
