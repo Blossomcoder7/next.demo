@@ -1,6 +1,4 @@
 "use client";
-
-import LogOutBtn from "@/_components/LogOutBtn";
 import { CldImage } from "next-cloudinary";
 import React, { useState } from "react";
 import { useSelector } from "@/_store/hooks";
@@ -12,12 +10,9 @@ import Image from "next/image";
 
 import CloudinaryImageUpload from "./CloudinaryImageUpload";
 
-
 const MyProfile = () => {
   const [isEditing, setIsEditing] = useState<boolean>(false);
-
   const user = useSelector((state) => state.auth.user);
-
   const type = user?.userType === "user" ? "user" : "client";
   const {
     data: userData,

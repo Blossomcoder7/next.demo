@@ -40,11 +40,16 @@ export default function Home() {
                 </button>
                 <div
                   className={clsx(
-                    " text-center bg-[#fcfcfc]  hover:bg-[#d9b989] text-[#262626] cursor-pointer transition-all duration-200 ease-in  hover:text-white font-semibold px-6 py-3 rounded-[33px]",
+                    " text-center bg-[#fcfcfc]  hover:bg-[#d9b989] text-[#262626] cursor-pointer transition-all duration-200 ease-in  hover:text-white font-semibold  rounded-[33px]",
                     "col-span-1 "
                   )}
                 >
-                  <LogOutBtn />
+                  <LogOutBtn
+                    className={clsx(
+                      " text-center bg-[#fcfcfc]  hover:bg-[#d9b989] text-[#262626] cursor-pointer transition-all duration-200 ease-in  hover:text-white font-semibold px-6 py-3 rounded-[33px]",
+                      "col-span-1 "
+                    )}
+                  />
                 </div>
               </div>
               <p className="text-[#fcfcfc] text-sm text-center mb-8 tracking-wide">
@@ -77,7 +82,12 @@ export default function Home() {
                   </button>
 
                   <button
-                    onClick={() => signIn("google")}
+                    onClick={() =>
+                      signIn("google", {
+                        redirect: true,
+                        callbackUrl: "/profile",
+                      })
+                    }
                     className={clsx(
                       " text-center bg-[#fcfcfc]  hover:bg-[#d9b989] text-[#262626] cursor-pointer transition-all duration-200 ease-in  hover:text-white font-semibold px-6 py-3 rounded-[33px]",
                       "col-span-1"

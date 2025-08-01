@@ -48,7 +48,7 @@ export const authOptions: AuthOptions = {
   callbacks: {
     async jwt({ token, user, account }): Promise<JWT> {
       await connectDb();
-      console.log({ user, account });
+      // console.log({ user, account });
       // From Google OAuth
       if (account?.provider === "google" && token?.email) {
         const existingUser =
@@ -65,11 +65,11 @@ export const authOptions: AuthOptions = {
               provider: "google",
             });
 
-        console.log({
-          user,
-          userToUse,
-          u: token.user,
-        });
+        // console.log({
+        //   user,
+        //   userToUse,
+        //   u: token.user,
+        // });
         token.user = sanitizeUser(userToUse);
       } else if (account?.provider === "credentials") {
         token.user = user;
@@ -79,10 +79,10 @@ export const authOptions: AuthOptions = {
     },
 
     async session({ session, token }) {
-      console.log({
-        session,
-        token,
-      });
+      // console.log({
+      //   session,
+      //   token,
+      // });
       if (token?.user) {
         session.user = token.user as any;
       }
