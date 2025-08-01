@@ -1,35 +1,65 @@
-// pages/api/ga-stats.js
 import { BetaAnalyticsDataClient } from "@google-analytics/data";
 import { NextResponse } from "next/server";
 
-const propertyId = "499270613"; // just the number string, e.g. "123456789"
+const propertyId = process.env.GA_PROPERTY_ID!;
 
 const client = new BetaAnalyticsDataClient({
   credentials: JSON.parse(process.env.GA_SERVICE_ACCOUNT_KEY_JSON!),
 });
 
 async function fetchAnalytics() {
-  const [realtime] = await client.runRealtimeReport({
+  // Active users currently (real-time)
+  const [realtimeReport] = await client.runRealtimeReport({
     property: `properties/${propertyId}`,
+    dimensions: [{ name: "country" }, { name: "deviceCategory" }],
     metrics: [{ name: "activeUsers" }],
   });
 
-  const [last24] = await client.runReport({
+  const activeUsersCurrently =
+    realtimeReport?.rows?.[0]?.metricValues?.[0]?.value || "0";
+
+  // Active users in last 5 minutes (from realtime report)
+  const [last5MinutesReport] = await client.runRealtimeReport({
+    property: `properties/${propertyId}`,
+    dimensions: [{ name: "minutesAgo" }],
+    metrics: [{ name: "activeUsers" }],
+  });
+
+  const usersLast5Minutes =
+    last5MinutesReport.rows?.[0]?.metricValues?.[0]?.value || "0";
+
+  // Active users in the last 24 hours (GA standard report)
+  const [last24HoursReport] = await client.runReport({
     property: `properties/${propertyId}`,
     dateRanges: [{ startDate: "1daysAgo", endDate: "today" }],
     metrics: [{ name: "activeUsers" }],
   });
 
-  const [total] = await client.runReport({
+  const usersLast24Hours =
+    last24HoursReport?.rows?.[0]?.metricValues?.[0]?.value || "0";
+
+  // Total active users since start date (2020-01-01)
+  const [totalUsersReport] = await client.runReport({
     property: `properties/${propertyId}`,
     dateRanges: [{ startDate: "2020-01-01", endDate: "today" }],
     metrics: [{ name: "activeUsers" }],
   });
 
+  const totalUsersSince2020 =
+    totalUsersReport?.rows?.[0]?.metricValues?.[0]?.value || "0";
+
+  console.log({
+    realtimeReport: JSON.stringify(realtimeReport),
+    last5MinutesReport: JSON.stringify(last5MinutesReport),
+    last24HoursReport: JSON.stringify(last24HoursReport),
+    totalUsersReport: JSON.stringify(totalUsersReport),
+  });
+
   return {
-    totalVisitors: total?.rows?.[0]?.metricValues?.[0]?.value || "0",
-    visitorsLast24Hrs: last24?.rows?.[0]?.metricValues?.[0]?.value || "0",
-    visitorsLast30Min: realtime?.rows?.[0]?.metricValues?.[0]?.value || "0",
+    totalUsersSince2020,
+    usersLast24Hours,
+    activeUsersCurrently,
+    usersLast5Minutes: usersLast5Minutes.toString(),
   };
 }
 
@@ -40,45 +70,44 @@ export async function GET() {
     return new NextResponse(
       JSON.stringify({
         success: true,
-        message: 'success',
+        message: "success",
         stats,
       }),
       {
         status: 200,
         headers: {
-          'Access-Control-Allow-Origin': '*',
-          'Access-Control-Allow-Methods': 'GET, OPTIONS',
-          'Access-Control-Allow-Headers': 'Content-Type',
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "GET, OPTIONS",
+          "Access-Control-Allow-Headers": "Content-Type",
         },
       }
     );
   } catch (error) {
-    console.error('Failed to fetch analytics:', error);
+    console.error("Failed to fetch analytics:", error);
     return new NextResponse(
       JSON.stringify({
         success: false,
-        error: 'Failed to fetch analytics data',
+        error: "Failed to fetch analytics data",
       }),
       {
         status: 500,
         headers: {
-          'Access-Control-Allow-Origin': '*',
-          'Access-Control-Allow-Methods': 'GET, OPTIONS',
-          'Access-Control-Allow-Headers': 'Content-Type',
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "GET, OPTIONS",
+          "Access-Control-Allow-Headers": "Content-Type",
         },
       }
     );
   }
 }
 
-// Handle OPTIONS preflight request
 export function OPTIONS() {
   return new NextResponse(null, {
     status: 204,
     headers: {
-      'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Methods': 'GET, OPTIONS',
-      'Access-Control-Allow-Headers': 'Content-Type',
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "GET, OPTIONS",
+      "Access-Control-Allow-Headers": "Content-Type",
     },
   });
 }
