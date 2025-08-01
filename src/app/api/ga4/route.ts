@@ -36,16 +36,49 @@ async function fetchAnalytics() {
 export async function GET() {
   try {
     const stats = await fetchAnalytics();
-    console.log({ stats });
-    return NextResponse.json(
-      { success: true, message: "success", stats },
-      { status: 200 }
+
+    return new NextResponse(
+      JSON.stringify({
+        success: true,
+        message: 'success',
+        stats,
+      }),
+      {
+        status: 200,
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Methods': 'GET, OPTIONS',
+          'Access-Control-Allow-Headers': 'Content-Type',
+        },
+      }
     );
   } catch (error) {
-    console.error("Failed to fetch analytics:", error);
-    return NextResponse.json(
-      { success: false, error: "Failed to fetch analytics data" },
-      { status: 500 }
+    console.error('Failed to fetch analytics:', error);
+    return new NextResponse(
+      JSON.stringify({
+        success: false,
+        error: 'Failed to fetch analytics data',
+      }),
+      {
+        status: 500,
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Methods': 'GET, OPTIONS',
+          'Access-Control-Allow-Headers': 'Content-Type',
+        },
+      }
     );
   }
+}
+
+// Handle OPTIONS preflight request
+export function OPTIONS() {
+  return new NextResponse(null, {
+    status: 204,
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'GET, OPTIONS',
+      'Access-Control-Allow-Headers': 'Content-Type',
+    },
+  });
 }
