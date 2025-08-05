@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 import clsx from "clsx";
 import BrandingSeg from "@/_components/BrandingSeg";
 import GA4 from "@/_components/GA4";
+import CustomStats from "@/_components/CustomStats";
 
 export default function Home() {
   const router = useRouter();
@@ -16,7 +17,11 @@ export default function Home() {
 
   return (
     <>
-      <GA4 />
+      <div className="flex   fixed bottom-2 left-2 space-x-4 px-4 gap-2">
+        <GA4 />
+        <CustomStats />
+      </div>
+      {/* <CustomStats /> */}
       <div className="w-full min-h-screen  grid grid-cols-1 md:grid-cols-2 bg-[#262626] text-[#fcfcfc]">
         <BrandingSeg />
         <div className="col-span-full md:col-span-1  h-full  w-full  flex flex-col items-center px-5 justify-center space-y-5">
