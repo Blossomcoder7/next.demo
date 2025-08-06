@@ -1,10 +1,21 @@
+"use client";
 import getIP from "@/_utils/getIp";
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 export default function useAnalytics() {
+  const [ip, setIp] = useState<string | null>(null);
+  useEffect(() => {
+    const fn = async () => {
+      const ip = await getIP();
+      setIp(ip);
+    };
+    fn();
+  }, []);
+
   const connect = useCallback(async () => {
     try {
       const ip = await getIP();
+      setIp(ip);
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_API_STATS_URL!}/api/connect`,
         {
@@ -24,14 +35,13 @@ export default function useAnalytics() {
     try {
       const disconnectUrl = `${process.env
         .NEXT_PUBLIC_API_STATS_URL!}/api/disconnect`;
-      const data = JSON.stringify({ reason: "unload" });
-      const blob = new Blob([data], { type: "application/json" });
-      const ok = navigator.sendBeacon(disconnectUrl, blob);
+      const data = JSON.stringify({ ip });
+      const ok = navigator.sendBeacon(disconnectUrl, data);
       console.log("Sent beacon?", ok);
     } catch (err) {
       console.error("Beacon failed:", err);
     }
-  }, []);
+  }, [ip]);
 
   useEffect(() => {
     connect();

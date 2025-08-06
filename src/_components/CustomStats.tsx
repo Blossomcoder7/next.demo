@@ -9,7 +9,7 @@ const CustomStats = () => {
   return (
     <>
       {loading ? (
-        "Loading GA4 stats..."
+        "Loading Custom stats..."
       ) : (
         <div className="flex flex-col gap-1 bg-white p-2  rounded-[13px] text-left h-fit w-fit ">
           <span className="text-black font-bold uppercase">
