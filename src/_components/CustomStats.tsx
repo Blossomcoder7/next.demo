@@ -1,11 +1,10 @@
 "use client";
 
-import useAnalytics from "@/_hooks/useAnalytics";
 import useCustomStats from "@/_hooks/useCustomStats";
 
 const CustomStats = () => {
   const { loading, stats } = useCustomStats();
-  useAnalytics();
+
   return (
     <>
       {loading ? (
