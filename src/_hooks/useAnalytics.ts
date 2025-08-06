@@ -7,7 +7,6 @@ export default function useAnalytics() {
       const ip = await getIP();
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_API_STATS_URL!}/api/connect`,
-
         {
           method: "POST",
           credentials: "include",
@@ -25,7 +24,9 @@ export default function useAnalytics() {
     try {
       const disconnectUrl = `${process.env
         .NEXT_PUBLIC_API_STATS_URL!}/api/disconnect`;
-      const ok = navigator.sendBeacon(disconnectUrl);
+      const data = JSON.stringify({ reason: "unload" });
+      const blob = new Blob([data], { type: "application/json" });
+      const ok = navigator.sendBeacon(disconnectUrl, blob);
       console.log("Sent beacon?", ok);
     } catch (err) {
       console.error("Beacon failed:", err);
@@ -34,11 +35,9 @@ export default function useAnalytics() {
 
   useEffect(() => {
     connect();
-
-    window.addEventListener("unload", disconnect);
-
+    window.addEventListener("pagehide", disconnect);
     return () => {
-      window.removeEventListener("unload", disconnect);
+      window.removeEventListener("pagehide", disconnect);
     };
   }, [connect, disconnect]);
 }
