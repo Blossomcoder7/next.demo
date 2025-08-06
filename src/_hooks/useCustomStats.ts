@@ -1,5 +1,6 @@
 "use client";
 
+import getIP from "@/_utils/getIp";
 import { useEffect, useState, useRef, useCallback } from "react";
 
 interface CUSTOM_STATS {

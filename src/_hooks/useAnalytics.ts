@@ -1,14 +1,17 @@
+import getIP from "@/_utils/getIp";
 import { useCallback, useEffect } from "react";
 
 export default function useAnalytics() {
   const connect = useCallback(async () => {
     try {
+      const ip = await getIP();
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_API_STATS_URL!}/api/connect`,
 
         {
           method: "POST",
           credentials: "include",
+          body: JSON.stringify({ ip }),
         }
       );
       const res = await response.json();
