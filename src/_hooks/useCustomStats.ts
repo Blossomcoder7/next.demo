@@ -54,13 +54,16 @@ const useCustomStats = (): {
 
   const fetchStats = useCallback(async () => {
     try {
+      const ip = await getIP();
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_API_STATS_URL!}/api/custom-stats`,
         {
+          method: "POST",
           credentials: "include",
           headers: {
             "x-stats-access-key": process.env.NEXT_PUBLIC_STATS_API_KEY!,
           },
+          body: JSON.stringify({ ip }),
         }
       );
       console.log({ res });
