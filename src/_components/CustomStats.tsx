@@ -1,10 +1,8 @@
 "use client";
-
 import useCustomStats from "@/_hooks/useCustomStats";
 
 const CustomStats = () => {
   const { loading, stats } = useCustomStats();
-
   return (
     <>
       {loading ? (

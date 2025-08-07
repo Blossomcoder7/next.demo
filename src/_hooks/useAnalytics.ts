@@ -16,16 +16,27 @@ export default function useAnalytics() {
     try {
       const ip = await getIP();
       setIp(ip);
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_STATS_URL!}/api/connect`,
-        {
-          method: "POST",
-          credentials: "include",
-          body: JSON.stringify({ ip }),
+      const attempt = async () => {
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_STATS_URL!}/api/connect`,
+          {
+            method: "POST",
+            credentials: "include",
+            body: JSON.stringify({ ip }),
+          }
+        );
+        const res = await response.json();
+        console.log("Connected:", res);
+        if (res?.retry === true) {
+          console.warn(
+            "Server asking to retry with the request , Reconnecting..."
+          );
+          await new Promise((resolve) => setTimeout(resolve, 100));
+          return await attempt();
         }
-      );
-      const res = await response.json();
-      console.log("Connected:", res);
+        return res;
+      };
+      await attempt();
     } catch (err) {
       console.error("Connect failed:", err);
     }
